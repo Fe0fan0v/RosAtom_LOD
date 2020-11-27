@@ -1,6 +1,6 @@
 from vosk import Model, KaldiRecognizer
 import os, wave, json
-
+from pydub import AudioSegment
 
 class SpeechToText:
     def __init__(self, file_folder):
@@ -11,8 +11,10 @@ class SpeechToText:
             print(
                 "Please create speech model as 'model' in the current folder.")
             exit(1)
-
-        wf = wave.open(self.file_folder, "rb")
+        sound = AudioSegment.from_wav(self.file_folder)
+        sound = sound.set_channels(1)
+        sound.export("path.wav", format="wav")
+        wf = wave.open('path.wav', "rb")
         if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
             print("Audio file must be WAV format mono PCM.")
             exit(1)
